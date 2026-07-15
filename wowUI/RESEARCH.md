@@ -12,8 +12,11 @@ Classic WoW's non-combat UI is a **faux-medieval "fantasy stone-and-gold"** syst
 Almost every window is built from the same kit, which is why it feels so cohesive.
 Recurring motifs:
 
-- **Heavy ornamental frames** — thick borders that look like carved stone or cast
-  metal, with decorative corner pieces, wrapping a darker interior.
+- **Heavy iron/gunmetal frames** — the main windows (quest log, character, etc.) are
+  bordered by a thick **warm gunmetal band** (dark brownish-grey brushed metal, *not*
+  gold), with a beveled highlight along the inner edge and a visible surface **grain
+  texture**. Gold appears only as accents — the portrait ring, the title text, button
+  labels — not as the frame itself.
 - **A circular portrait medallion** inset into the **top-left** of most major windows
   (character sheet, quest log, spellbook, talents), set in an ornate gold ring.
 - **A title** centered along the top in an antique serif.
@@ -158,8 +161,14 @@ parchment or list area beneath.
 
 Build once, reuse everywhere:
 
-- **Buttons** (`UIPanelButtonTemplate`): stone/metal pill, raised gold bevel, gold label,
-  **glow on hover**, **inset pushed state**. Disabled = grey label.
+- **Buttons** — two distinct styles:
+  - **Standard** (`UIPanelButtonTemplate`): stone/metal pill, raised gold bevel, gold
+    label, **glow on hover**, **inset pushed state**. Disabled = grey label.
+  - **Red action buttons** (`MagicButton` style): the bottom action bar of the quest
+    log / character frame uses **deep-red gradient buttons** (bright red top → dark
+    maroon bottom, ~`#a02722`→`#4e0c0a`) with a top bevel highlight and **gold/yellow
+    text** (`#ffd100`). Disabled buttons go flat dark-grey with grey text. This is the
+    look in the reference screenshot (Abandon / Share / Track / Options / Close).
 - **Close button**: round **red X circle**, top-right, overlapping the edge.
 - **Checkboxes**: square metal frame; checked = **gold check**.
 - **Sliders**: engraved groove + **gold knob**; label + min/max/value.
