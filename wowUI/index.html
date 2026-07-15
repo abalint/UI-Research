@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WoW Classic UI — Aesthetic Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Marcellus&family=Roboto+Condensed&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* text */
+    --gold:#ffd100; --white:#ffffff; --green:#1eff00; --red:#ff4040;
+    --grey:#9d9d9d; --flavor:#ffe27a;
+    /* quality */
+    --q-poor:#9d9d9d; --q-common:#ffffff; --q-uncommon:#1eff00;
+    --q-rare:#0070dd; --q-epic:#a335ee; --q-legendary:#ff8000; --q-artifact:#e6cc80;
+    /* metal / frame */
+    --metal-dark:#20160a; --metal-mid:#4a3b22; --metal-lite:#c7a857;
+    /* surfaces */
+    --stone:rgba(12,11,18,0.92);
+    --parch-a:#d7c69a; --parch-b:#b8995c;
+    --header-font:'Cinzel Decorative', Georgia, serif;
+    --body-font:'Marcellus', Georgia, 'Times New Roman', serif;
+    --num-font:'Roboto Condensed', 'Arial Narrow', sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:40px 20px 80px;
+    font-family:var(--body-font);
+    color:var(--white);
+    background:
+      radial-gradient(ellipse at 50% -10%, #2a2118 0%, #120d08 55%, #070505 100%),
+      #070505;
+    min-height:100vh;
+  }
+  .page-title{
+    text-align:center; color:var(--metal-lite);
+    font-family:var(--header-font); font-size:34px; letter-spacing:2px;
+    margin:0 0 6px; text-shadow:0 2px 6px #000, 0 0 18px rgba(199,168,87,.35);
+  }
+  .page-sub{
+    text-align:center; color:var(--grey); font-size:15px; margin:0 0 40px;
+    font-family:var(--body-font);
+  }
+  .grid{
+    max-width:1180px; margin:0 auto;
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
+    gap:34px; align-items:start;
+  }
+
+  /* ---------- THE NINE-SLICE PANEL (pure CSS approximation) ---------- */
+  .wow-panel{
+    position:relative;
+    background:
+      linear-gradient(180deg, rgba(40,34,22,.35), rgba(0,0,0,0) 120px),
+      var(--stone);
+    border:2px solid #000;
+    border-radius:4px;
+    padding:20px 18px 22px;
+    box-shadow:
+      inset 0 0 0 2px var(--metal-dark),
+      inset 0 0 0 4px var(--metal-lite),
+      inset 0 0 0 6px var(--metal-dark),
+      inset 0 0 40px rgba(0,0,0,.6),
+      0 10px 34px rgba(0,0,0,.7);
+  }
+  .wow-panel > .title{
+    font-family:var(--header-font);
+    color:var(--metal-lite); font-size:18px; letter-spacing:1px;
+    text-align:center; margin:0 40px 16px;
+    text-shadow:1px 1px 0 #000, 0 0 12px rgba(199,168,87,.3);
+  }
+  /* round red close button */
+  .close-btn{
+    position:absolute; top:-12px; right:-12px; width:34px; height:34px;
+    border-radius:50%; cursor:pointer; border:2px solid #2a0a0a;
+    background:radial-gradient(circle at 35% 30%, #ff6a5a, #b21f1f 55%, #6e0f0f);
+    box-shadow:inset 0 2px 3px rgba(255,255,255,.4), 0 3px 6px rgba(0,0,0,.7);
+    color:#ffdcdc; font-family:var(--body-font); font-weight:bold; font-size:18px;
+    line-height:30px; text-align:center; text-shadow:0 1px 2px #000;
+  }
+  .close-btn:hover{filter:brightness(1.15);}
+
+  /* portrait medallion */
+  .medallion{
+    position:absolute; top:-16px; left:-16px; width:64px; height:64px;
+    border-radius:50%;
+    background:radial-gradient(circle at 40% 35%, #6b5a3a, #241a0d 70%);
+    box-shadow:0 0 0 3px var(--metal-dark), 0 0 0 6px var(--metal-lite),
+               0 0 0 8px var(--metal-dark), 0 4px 10px rgba(0,0,0,.7);
+    display:flex; align-items:center; justify-content:center;
+    font-size:30px;
+  }
+
+  h3.section{
+    color:var(--gold); font-family:var(--body-font); font-size:15px;
+    letter-spacing:.5px; margin:18px 0 8px; text-shadow:1px 1px 0 #000;
+    border-bottom:1px solid rgba(199,168,87,.25); padding-bottom:4px;
+  }
+
+  /* ---------- QUEST LOG ---------- */
+  .zone-header{
+    color:var(--gold); cursor:pointer; padding:4px 2px; font-size:15px;
+    text-shadow:1px 1px 0 #000; user-select:none;
+  }
+  .zone-header::before{content:"− "; color:var(--metal-lite);}
+  .quest-list{list-style:none; margin:0 0 4px; padding:0 0 0 14px;}
+  .quest-list li{
+    padding:3px 2px; font-size:14px; cursor:pointer; border-radius:3px;
+  }
+  .quest-list li:hover{background:rgba(199,168,87,.12);}
+  .quest-list li.active{background:rgba(199,168,87,.18);}
+  .lvl{font-family:var(--num-font); font-weight:bold; margin-right:6px;}
+  .lvl.red{color:var(--red);} .lvl.orange{color:#ff8000;}
+  .lvl.yellow{color:var(--gold);} .lvl.green{color:var(--green);}
+  .lvl.grey{color:var(--grey);}
+
+  /* parchment quest detail */
+  .parchment{
+    margin-top:12px; border-radius:3px; padding:16px 16px 18px;
+    color:#2a1c0c; font-size:14px; line-height:1.5;
+    background:
+      repeating-linear-gradient(0deg, rgba(120,90,40,.05) 0 2px, transparent 2px 4px),
+      linear-gradient(160deg, var(--parch-a), var(--parch-b));
+    box-shadow:inset 0 0 30px rgba(90,60,20,.45), inset 0 0 0 2px rgba(80,55,20,.4);
+  }
+  .parchment .q-title{
+    font-family:var(--header-font); font-size:16px; color:#5a3410;
+    text-align:center; margin-bottom:10px;
+  }
+  .parchment .obj-head{color:#6b3d10; font-weight:bold; margin-top:8px;}
+  .parchment .obj-done{color:#245c12;}
+  .parchment .obj-todo{color:#7a4a12;}
+
+  /* ---------- WIDGET KIT ---------- */
+  .wow-btn{
+    font-family:var(--body-font); font-size:14px; color:var(--gold);
+    padding:7px 20px; cursor:pointer; margin:4px 6px 4px 0;
+    text-shadow:1px 1px 0 #000;
+    background:linear-gradient(180deg,#4a4033,#241d13);
+    border:1px solid #000; border-radius:4px;
+    box-shadow:inset 0 0 0 1px var(--metal-mid),
+               inset 0 1px 0 rgba(199,168,87,.35), 0 2px 3px rgba(0,0,0,.6);
+  }
+  .wow-btn:hover{filter:brightness(1.25);
+    box-shadow:inset 0 0 0 1px var(--metal-lite),
+               inset 0 0 10px rgba(199,168,87,.4), 0 2px 3px rgba(0,0,0,.6);}
+  .wow-btn:active{filter:brightness(.85); box-shadow:inset 0 2px 5px rgba(0,0,0,.7);}
+
+  .row{display:flex; align-items:center; gap:10px; margin:10px 0; font-size:14px;}
+  .check{
+    width:22px; height:22px; border:1px solid #000; border-radius:3px; flex:none;
+    background:linear-gradient(180deg,#2b2419,#14100a);
+    box-shadow:inset 0 0 0 1px var(--metal-mid), inset 0 1px 4px rgba(0,0,0,.7);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    color:var(--gold); font-weight:bold; font-size:16px; text-shadow:0 0 6px #ffd100;
+  }
+  .slider{
+    flex:1; height:10px; border-radius:5px; position:relative;
+    background:linear-gradient(180deg,#0c0a06,#241d12);
+    box-shadow:inset 0 0 0 1px var(--metal-mid), inset 0 1px 3px rgba(0,0,0,.8);
+  }
+  .slider .knob{
+    position:absolute; top:-5px; left:58%; width:16px; height:20px; border-radius:4px;
+    background:linear-gradient(180deg,#d8c082,#7a6428); border:1px solid #000;
+    box-shadow:0 1px 3px rgba(0,0,0,.7); cursor:grab;
+  }
+  .dropdown{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:6px 10px; font-size:14px; color:var(--white); cursor:pointer;
+    background:linear-gradient(180deg,#1a150d,#0c0a06);
+    border:1px solid #000; border-radius:4px;
+    box-shadow:inset 0 0 0 1px var(--metal-mid);
+  }
+  .dropdown .caret{color:var(--metal-lite);}
+
+  /* tabs */
+  .tabs{display:flex; gap:4px; margin-top:18px;}
+  .tab{
+    font-family:var(--body-font); font-size:13px; color:var(--grey);
+    padding:8px 16px 10px; cursor:pointer;
+    clip-path:polygon(8% 0, 92% 0, 100% 100%, 0 100%);
+    background:linear-gradient(180deg,#241d13,#12100a);
+    box-shadow:inset 0 1px 0 var(--metal-mid);
+  }
+  .tab.active{color:var(--gold); filter:brightness(1.4);
+    background:linear-gradient(180deg,#4a3d22,#241d13);}
+
+  /* tooltip */
+  .tooltip{
+    border:2px solid var(--q-epic); border-radius:4px; padding:12px 14px;
+    background:rgba(6,6,12,.94); font-size:14px; line-height:1.45;
+    box-shadow:0 0 14px rgba(163,53,238,.35), 0 6px 18px rgba(0,0,0,.7);
+    max-width:280px;
+  }
+  .tooltip .name{color:var(--q-epic); font-size:16px;}
+  .tooltip .type{color:var(--white); display:flex; justify-content:space-between;}
+  .tooltip .stat{color:var(--white);}
+  .tooltip .use{color:var(--green);}
+  .tooltip .req{color:var(--red);}
+  .tooltip .flavor{color:var(--flavor); font-style:italic; margin-top:6px;}
+  .tooltip .sell{color:var(--grey); margin-top:6px;}
+  .coin{color:#ffd100;} .coin.s{color:#c7c7c7;} .coin.c{color:#b87333;}
+
+  /* swatches */
+  .swatches{display:flex; flex-wrap:wrap; gap:8px;}
+  .sw{
+    font-family:var(--num-font); font-size:11px; padding:6px 8px; border-radius:3px;
+    color:#000; min-width:70px; text-align:center; text-shadow:0 1px 0 rgba(255,255,255,.3);
+  }
+  .divider{height:1px; background:rgba(199,168,87,.2); margin:16px 0;}
+  .note{color:var(--grey); font-size:12px; margin-top:24px; text-align:center;}
+</style>
+</head>
+<body>
+  <h1 class="page-title">World of Warcraft — Classic UI Study</h1>
+  <p class="page-sub">Pure-CSS approximation of the panel kit · quest log · tooltip · widgets · palette</p>
+
+  <div class="grid">
+
+    <!-- QUEST LOG -->
+    <section class="wow-panel">
+      <div class="medallion">🧝</div>
+      <div class="close-btn">×</div>
+      <div class="title">Quest Log</div>
+
+      <div class="zone-header">Elwynn Forest</div>
+      <ul class="quest-list">
+        <li class="active"><span class="lvl yellow">7</span>Wolves Across the Border</li>
+        <li><span class="lvl green">5</span>Kobold Candles</li>
+        <li><span class="lvl grey">3</span>A Fishy Peril</li>
+      </ul>
+      <div class="zone-header">Westfall</div>
+      <ul class="quest-list">
+        <li><span class="lvl red">14</span>The Defias Brotherhood</li>
+        <li><span class="lvl orange">11</span>Poor Old Blanchy</li>
+      </ul>
+
+      <div class="parchment">
+        <div class="q-title">Wolves Across the Border</div>
+        <div class="obj-head">Objectives</div>
+        <div class="obj-todo">Slay 8 Rabid Thistle Bears.</div>
+        <div class="obj-done">Bear pelts recovered (5/5)</div>
+        <div class="obj-head" style="margin-top:10px;">Description</div>
+        The wolves have grown bold this season, venturing far past the treeline
+        and into the farmsteads. Thin their numbers before the harvest is lost.
+      </div>
+
+      <div class="tabs">
+        <div class="tab active">Quests</div>
+        <div class="tab">Map</div>
+      </div>
+    </section>
+
+    <!-- OPTIONS / WIDGET KIT -->
+    <section class="wow-panel">
+      <div class="close-btn">×</div>
+      <div class="title">Interface Options</div>
+
+      <h3 class="section">Display</h3>
+      <div class="row"><div class="check">✔</div> Show quest objectives</div>
+      <div class="row"><div class="check"></div> Auto loot</div>
+      <div class="row">Master Volume <div class="slider"><div class="knob"></div></div></div>
+      <div class="row" style="display:block;">
+        Graphics Quality
+        <div class="dropdown" style="margin-top:6px;"><span>Ultra</span><span class="caret">▾</span></div>
+      </div>
+
+      <h3 class="section">Actions</h3>
+      <button class="wow-btn">Okay</button>
+      <button class="wow-btn">Cancel</button>
+      <button class="wow-btn">Defaults</button>
+
+      <div class="tabs">
+        <div class="tab active">Controls</div>
+        <div class="tab">Interface</div>
+        <div class="tab">Sound</div>
+      </div>
+    </section>
+
+    <!-- TOOLTIP + PALETTE -->
+    <section class="wow-panel">
+      <div class="close-btn">×</div>
+      <div class="title">Item Tooltip</div>
+
+      <div class="tooltip">
+        <div class="name">Staff of Jordan</div>
+        <div class="type"><span>Two-Hand</span><span>Staff</span></div>
+        <div class="stat">128 - 194 Damage &nbsp;Speed 3.00</div>
+        <div class="stat">(53.7 damage per second)</div>
+        <div class="stat">+10 Stamina</div>
+        <div class="stat">+18 Intellect</div>
+        <div class="use">Equip: Increases spell power by 40.</div>
+        <div class="req">Requires Level 60</div>
+        <div class="flavor">"The winds of Silvermoon still cling to it."</div>
+        <div class="sell">Sell Price: <span class="coin">14</span>g <span class="coin s">20</span>s <span class="coin c">5</span>c</div>
+      </div>
+
+      <h3 class="section">Item Quality</h3>
+      <div class="swatches">
+        <div class="sw" style="background:#9d9d9d">Poor</div>
+        <div class="sw" style="background:#ffffff">Common</div>
+        <div class="sw" style="background:#1eff00">Uncommon</div>
+        <div class="sw" style="background:#0070dd;color:#fff">Rare</div>
+        <div class="sw" style="background:#a335ee;color:#fff">Epic</div>
+        <div class="sw" style="background:#ff8000">Legendary</div>
+        <div class="sw" style="background:#e6cc80">Artifact</div>
+      </div>
+
+      <h3 class="section">Text Colors</h3>
+      <div class="swatches">
+        <div class="sw" style="background:#ffd100">Gold hdr</div>
+        <div class="sw" style="background:#ffffff">White</div>
+        <div class="sw" style="background:#1eff00">Green</div>
+        <div class="sw" style="background:#ff4040;color:#fff">Red</div>
+        <div class="sw" style="background:#9d9d9d">Grey</div>
+      </div>
+    </section>
+
+  </div>
+
+  <p class="note">Pure-CSS study — no game textures used. Fonts: Cinzel Decorative (titles) + Marcellus (body) as free stand-ins for Morpheus / Friz Quadrata. See RESEARCH.md for the full breakdown.</p>
+</body>
+</html>
