@@ -12,8 +12,8 @@
     --gold:#ffd100; --gold-soft:#f4e0a0; --white:#f6efe0; --grey:#8f8a80; --q-rare:#0070dd;
 
     /* warm tarnished bronze-brown metal (dark) */
-    --m-hi:#9c8149; --m-lite:#7a643580; --m-base:#5a4826; --m-mid:#3f3117;
-    --m-sh:#261c0d; --m-black:#0e0904;
+    --m-hi:#907640; --m-lite:#7a643580; --m-base:#503f21; --m-mid:#382b14;
+    --m-sh:#22190b; --m-black:#0c0703;
     --gold-ring:#cf9f33; --gold-ring-dk:#5f440f;
 
     --slate:#0b0a08;
@@ -50,12 +50,17 @@
       inset 3px 0 3px rgba(0,0,0,.3),
       inset -3px 0 3px rgba(0,0,0,.3),
       inset 0 0 0 1px rgba(0,0,0,.55),
+      inset 0 0 70px rgba(0,0,0,.4),           /* edge vignette on the metal */
       0 0 0 1px var(--m-black),
       0 18px 46px rgba(0,0,0,.85);
   }
-  /* inner ornamental bead line just inside the frame */
-  .window > .bead{position:absolute; inset:10px; border-radius:6px; pointer-events:none;
-    box-shadow:inset 0 0 0 1px rgba(0,0,0,.6), inset 0 0 0 2px rgba(203,182,129,.28), inset 0 0 0 3px rgba(0,0,0,.45);}
+  /* inner ornamental gold bead molding just inside the frame */
+  .window > .bead{position:absolute; inset:9px; border-radius:6px; pointer-events:none;
+    box-shadow:
+      inset 0 0 0 1px rgba(0,0,0,.7),
+      inset 0 0 0 2px rgba(207,159,51,.5),     /* raised gold bead */
+      inset 0 0 0 3px rgba(0,0,0,.6),
+      inset 0 0 0 4px rgba(207,159,51,.2);}
   /* corner rivets */
   .rivet{position:absolute; width:9px; height:9px; border-radius:50%;
     background:radial-gradient(circle at 38% 32%, #d8c896, #4a3f28 60%, #14100a);
@@ -85,7 +90,15 @@
       0 6px 14px rgba(0,0,0,.75);                /* seats it onto the frame */
     display:flex; align-items:center; justify-content:center;
   }
-  .medallion .book{font-size:30px; filter:drop-shadow(0 2px 2px #000);}
+  /* CSS-drawn closed blue book with gilt trim + page edge */
+  .medallion .book{position:relative; width:30px; height:36px; border-radius:2px 4px 4px 2px;
+    background:linear-gradient(90deg,#12305e 0 4px, #22508f 4px 62%, #2f63ad 100%);
+    box-shadow:inset -4px 0 0 -1px #d9c58f, inset -5px 0 0 -1px #8a6f2c, /* page edge + trim */
+      inset 0 0 0 1px #0a1a38, 0 3px 4px rgba(0,0,0,.7); transform:rotate(-3deg);}
+  .medallion .book::before{content:""; position:absolute; inset:5px 8px 5px 6px; border:1px solid #caa63e;
+    border-radius:1px; opacity:.85;}   /* gold panel line */
+  .medallion .book::after{content:""; position:absolute; left:13px; top:12px; width:6px; height:6px;
+    border-radius:50%; background:radial-gradient(circle at 40% 35%,#ffe98a,#a9791f); box-shadow:0 0 0 1px #5a3e0c;} /* emblem */
 
   /* close button — straddles the top-right corner, own bezel */
   .close-btn{position:absolute; top:-11px; right:-9px; width:34px; height:34px; cursor:pointer; z-index:6;
@@ -112,7 +125,7 @@
     background:linear-gradient(180deg,#1a150e,#0a0705);
     box-shadow:inset 0 2px 4px rgba(0,0,0,.9), inset 0 -1px 0 rgba(203,182,129,.2),   /* sunken field */
       0 0 0 1px var(--m-black), 0 0 0 2px rgba(203,182,129,.28), 0 1px 0 rgba(203,182,129,.2);}
-  .showmap{margin-left:auto; color:var(--gold); font-size:14px; display:flex; align-items:center; gap:9px; padding-right:6px;}
+  .showmap{margin-left:auto; color:var(--gold); font-size:14px; display:flex; align-items:center; gap:9px; padding-right:14px;}
   .mapbtn{width:30px; height:26px; border-radius:5px;
     background:linear-gradient(180deg,#c8b483,#7a6238); background-blend-mode:overlay;
     box-shadow:inset 0 1px 0 rgba(255,245,210,.5), inset 0 -2px 3px rgba(0,0,0,.5),
@@ -178,10 +191,15 @@
     text-transform:uppercase; margin:14px 0 5px; text-shadow:0 1px 0 rgba(255,250,220,.4);}
   .d-body{font-size:14px; line-height:1.5; color:#3a2611;}
   .signature{font-family:var(--header-font); font-style:italic; color:#2f4a86; font-size:17px; margin-top:14px;}
-  .seal{float:right; width:80px; height:80px; border-radius:50%; margin:-4px 4px 6px 12px;
-    background:radial-gradient(circle at 38% 30%, #4a86dc, #123a72 58%, #0a2246);
-    box-shadow:inset 0 3px 7px rgba(255,255,255,.4), inset 0 -7px 11px rgba(0,0,0,.55), 0 3px 6px rgba(0,0,0,.4);
-    clip-path:polygon(50% 0,63% 10%,80% 6%,86% 22%,100% 32%,92% 50%,100% 68%,84% 76%,80% 94%,63% 89%,50% 100%,37% 89%,20% 94%,16% 76%,0 68%,8% 50%,0 32%,14% 22%,20% 6%,37% 10%);}
+  .seal{position:relative; float:right; width:78px; height:78px; margin:-4px 6px 6px 12px;
+    border-radius:47% 53% 52% 48% / 50% 47% 53% 50%;   /* irregular round wax blob */
+    background:radial-gradient(circle at 38% 30%, #4f8ce0, #14407c 56%, #0a2144);
+    box-shadow:inset 0 3px 8px rgba(160,200,255,.45), inset 0 -8px 12px rgba(0,0,0,.6),
+      inset 0 0 0 1px rgba(0,0,0,.3), 0 3px 7px rgba(0,0,0,.45);}
+  .seal::before{content:""; position:absolute; inset:11px; border-radius:50%;
+    box-shadow:inset 0 2px 3px rgba(0,0,0,.5), inset 0 -2px 3px rgba(150,190,255,.35);}  /* stamped rim */
+  .seal::after{content:"\2694"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:30px; color:#0e2f5e; text-shadow:0 1px 0 rgba(140,180,240,.4), 0 -1px 1px rgba(0,0,0,.5);}  /* embossed sigil */
   .reward-item{display:flex; align-items:center; gap:9px; margin:6px 0;}
   .reward-item .icon{width:40px; height:40px; flex:none; border-radius:3px;
     background:radial-gradient(circle at 40% 30%, #4a5a8a, #1a2038);
@@ -269,9 +287,8 @@
           <div class="d-sub">Meet Master Mathias Shaw in Stormwind Harbor.</div>
           <div class="d-head">Description</div>
           <div class="d-body">Champions of the Alliance,<br><br>
-            At last the time has come for us to reclaim what is rightfully ours! Our final push to
-            retake Lordaeron Keep shall commence at dawn.<br><br>
-            The Horde and their Warchief must answer for their crimes!</div>
+            At last the time has come to reclaim what is rightfully ours! Our final push to
+            retake Lordaeron Keep shall commence at dawn.</div>
           <div class="signature">King<br>Anduin Wrynn</div>
           <div class="seal"></div>
           <div style="clear:both"></div>
