@@ -10,268 +10,329 @@
 <style>
   :root{
     --gold:#ffd100; --gold-soft:#f4e0a0; --white:#f6efe0; --grey:#8f8a80;
-    --green:#1eff00; --red-txt:#ff4d4d;
-    /* quality */
-    --q-common:#ffffff; --q-uncommon:#1eff00; --q-rare:#0070dd;
-    --q-epic:#a335ee; --q-legendary:#ff8000;
-    /* iron frame */
-    --iron-hi:#6c665a; --iron:#403a30; --iron-lo:#1c1813; --iron-edge:#0a0806;
-    /* dark slate list */
-    --slate:#0d0c0a;
-    /* parchment */
-    --parch-hi:#e3d3a8; --parch:#c9b07a;
+    --q-rare:#0070dd;
+
+    /* warm gunmetal */
+    --m-hi:#8a8072; --m-lite:#6a6155; --m-base:#453f37; --m-sh:#241f19; --m-black:#080604;
+    --gold-ring:#c79a34; --gold-ring-dk:#6d4f15;
+
+    --slate:#0c0b09;
+    --parch-hi:#e7d9af; --parch:#cbb27c; --parch-lo:#9c7c44;
+
     --header-font:'Cinzel', Georgia, serif;
     --body-font:'Marcellus', Georgia, 'Times New Roman', serif;
     --num-font:'Roboto Condensed','Arial Narrow',sans-serif;
 
-    /* self-contained grain texture (grayscale fractal noise) */
-    --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    /* --- EMBOSSED metal grain: procedural height via feDiffuseLighting (no game art) --- */
+    --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='4' seed='7' stitchTiles='stitch' result='n'/%3E%3CfeDiffuseLighting in='n' surfaceScale='1.6' diffuseConstant='1.15' lighting-color='%23ffffff' result='l'%3E%3CfeDistantLight azimuth='225' elevation='55'/%3E%3C/feDiffuseLighting%3E%3CfeColorMatrix in='l' type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+    /* finer grain for parchment / slate */
+    --grain-fine:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='3' seed='3' stitchTiles='stitch' result='n'/%3E%3CfeDiffuseLighting in='n' surfaceScale='0.8' diffuseConstant='1.1' lighting-color='%23ffffff' result='l'%3E%3CfeDistantLight azimuth='235' elevation='60'/%3E%3C/feDiffuseLighting%3E%3CfeColorMatrix in='l' type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E");
   }
   *{box-sizing:border-box;}
   body{
-    margin:0; padding:36px 16px 70px;
-    font-family:var(--body-font); color:var(--white);
-    background:radial-gradient(ellipse at 50% 0%, #3a2c20 0%, #1a120c 55%, #0a0705 100%);
+    margin:0; padding:36px 16px 70px; font-family:var(--body-font); color:var(--white);
+    background:radial-gradient(ellipse at 50% 0%, #3a2c20, #1a120c 55%, #0a0705 100%);
     min-height:100vh;
   }
-  .page-title{
-    text-align:center; font-family:var(--header-font); font-weight:700;
-    color:var(--gold); font-size:26px; letter-spacing:2px; margin:0 0 4px;
-    text-shadow:0 2px 4px #000;
-  }
-  .page-sub{text-align:center; color:var(--grey); font-size:14px; margin:0 0 34px;}
+  .page-title{text-align:center; font-family:var(--header-font); font-weight:700;
+    color:var(--gold); font-size:25px; letter-spacing:2px; margin:0 0 4px; text-shadow:0 2px 4px #000;}
+  .page-sub{text-align:center; color:var(--grey); font-size:14px; margin:0 0 32px;}
 
-  /* ===================== IRON WINDOW FRAME ===================== */
+  /* raised / sunken bevel helpers ---------------------------------------- */
+  /* raised = light top-left, dark bottom-right + outer drop  */
+  /* sunken = dark top-left, light bottom-right (recessed well) */
+
+  /* ============================ IRON WINDOW ============================ */
   .window{
-    width:820px; max-width:100%; margin:0 auto; position:relative;
-    padding:15px;                       /* = metal thickness */
-    border-radius:10px;
-    background:
-      var(--noise),
-      linear-gradient(180deg, var(--iron-hi) 0%, var(--iron) 8%, var(--iron-lo) 100%);
-    background-blend-mode:overlay;
-    border:1px solid var(--iron-edge);
+    width:832px; max-width:100%; margin:0 auto; position:relative;
+    padding:20px 18px;
+    border-radius:12px;
+    background-image:var(--grain), linear-gradient(180deg, var(--m-hi), var(--m-base) 22%, var(--m-sh));
+    background-size:170px 170px, 100% 100%;
+    background-blend-mode:overlay, normal;
+    /* the metal frame edge: outer keyline, bright top bevel, dark bottom bevel */
     box-shadow:
-      inset 0 0 0 1px rgba(150,140,120,.25),   /* top bevel highlight */
-      inset 0 0 14px rgba(0,0,0,.7),
-      0 14px 40px rgba(0,0,0,.8);
+      inset 0 2px 1px rgba(190,180,160,.55),   /* top rim light  */
+      inset 0 -3px 3px rgba(0,0,0,.75),         /* bottom rim dark */
+      inset 2px 0 2px rgba(0,0,0,.35),
+      inset -2px 0 2px rgba(0,0,0,.35),
+      inset 0 0 0 1px rgba(0,0,0,.6),           /* inner keyline  */
+      0 0 0 1px var(--m-black),                 /* outer keyline  */
+      0 16px 44px rgba(0,0,0,.85);
   }
-  /* inner dark channel that the content panels sit inside */
-  .window::before{
-    content:""; position:absolute; inset:12px; border-radius:5px;
-    box-shadow:inset 0 0 0 2px var(--iron-edge), inset 0 0 0 3px rgba(120,110,95,.2);
-    pointer-events:none;
+  /* recessed channel that holds the content (frame appears to sit proud around it) */
+  .well{
+    position:relative; border-radius:6px; padding:10px 11px 12px;
+    background:rgba(0,0,0,.35);
+    box-shadow:
+      inset 0 3px 6px rgba(0,0,0,.85),          /* sunken: dark inner-top */
+      inset 0 1px 0 rgba(0,0,0,.9),
+      inset 0 -1px 0 rgba(150,140,120,.18),     /* faint bottom lift */
+      0 1px 0 rgba(170,160,140,.25);            /* thin bright lip below frame */
   }
+  /* corner rivets on the outer metal */
+  .window::before,.window::after{
+    content:""; position:absolute; width:9px; height:9px; border-radius:50%;
+    background:radial-gradient(circle at 38% 32%, #b7ad98, #3a352c 62%, #14110c);
+    box-shadow:0 1px 1px rgba(0,0,0,.7), inset 0 -1px 1px rgba(0,0,0,.5);
+  }
+  .window::before{top:7px; right:7px;}
+  .window::after{bottom:7px; left:7px;}
 
-  /* -------- title bar -------- */
-  .titlebar{position:relative; height:34px; margin:2px 0 6px;}
+  /* ---------- title bar ---------- */
+  .titlebar{position:relative; height:38px; margin:0 0 9px; padding-left:70px;}
   .win-title{
-    position:absolute; left:0; right:0; top:2px; text-align:center;
-    font-family:var(--body-font); color:var(--gold); font-size:19px;
-    letter-spacing:.5px; text-shadow:1px 1px 2px #000;
+    position:absolute; left:70px; right:44px; top:5px; text-align:center;
+    color:var(--gold); font-size:19px; letter-spacing:.5px;
+    text-shadow:0 0 8px rgba(255,209,0,.25), 1px 1px 2px #000;
   }
-  .medallion{
-    position:absolute; top:-16px; left:-8px; width:66px; height:66px; border-radius:50%;
-    background:radial-gradient(circle at 42% 35%, #2b3a52, #0c1420 72%);
-    box-shadow:0 0 0 3px #1a130a, 0 0 0 6px #b9922f, 0 0 0 8px #6b4f18,
-               0 0 0 9px #1a130a, 0 5px 12px rgba(0,0,0,.8);
-    display:flex; align-items:center; justify-content:center; font-size:30px;
-    z-index:3;
+
+  /* INTEGRATED portrait ring — same metal material, nested into the frame corner */
+  .portal{
+    position:absolute; top:-9px; left:-6px; width:74px; height:74px; border-radius:50%;
+    background-image:var(--grain), radial-gradient(circle at 42% 34%, var(--m-hi), var(--m-base) 60%, var(--m-sh));
+    background-size:170px 170px, 100%;
+    background-blend-mode:overlay, normal;
+    /* metal collar + gold inner ring + deep inset for the icon */
+    box-shadow:
+      inset 0 2px 2px rgba(200,190,170,.6),
+      inset 0 -3px 4px rgba(0,0,0,.7),
+      inset 0 0 0 6px var(--m-sh),               /* dark valley */
+      inset 0 0 0 7px var(--gold-ring-dk),
+      inset 0 0 0 9px var(--gold-ring),          /* gilt ring */
+      inset 0 0 0 10px var(--gold-ring-dk),
+      inset 0 0 14px 12px rgba(0,0,0,.9),        /* icon well shadow */
+      0 0 0 1px var(--m-black),
+      0 4px 10px rgba(0,0,0,.7);
+    display:flex; align-items:center; justify-content:center; z-index:4;
   }
+  .portal .book{font-size:30px; filter:drop-shadow(0 2px 2px #000);}
+
   .close-btn{
-    position:absolute; top:-4px; right:-4px; width:30px; height:30px; cursor:pointer;
-    border-radius:4px; border:1px solid #2a0505;
-    background:linear-gradient(180deg,#c23a2a,#7a1414);
-    box-shadow:inset 0 1px 0 rgba(255,180,160,.6), 0 2px 4px rgba(0,0,0,.7);
-    color:#ffe0b0; font-weight:bold; font-size:17px; line-height:28px; text-align:center;
-    text-shadow:0 1px 1px #000;
+    position:absolute; top:-2px; right:-2px; width:32px; height:32px; cursor:pointer;
+    border-radius:5px; color:#ffe0b0; font-weight:bold; font-size:16px; line-height:30px;
+    text-align:center; text-shadow:0 1px 1px #000;
+    background:linear-gradient(180deg,#c8402e,#8a1a15 55%,#5a0e0b);
+    box-shadow:
+      inset 0 1px 0 rgba(255,190,160,.75),      /* raised top light */
+      inset 0 -2px 2px rgba(0,0,0,.6),
+      inset 0 0 0 1px rgba(0,0,0,.5),
+      0 0 0 1px var(--m-black),                 /* own metal keyline */
+      0 0 0 2px rgba(150,140,120,.35),          /* metal bezel */
+      0 2px 3px rgba(0,0,0,.7);
   }
-  .close-btn:hover{filter:brightness(1.15);}
+  .close-btn:hover{filter:brightness(1.18);}
+  .close-btn:active{filter:brightness(.82); box-shadow:inset 0 2px 4px rgba(0,0,0,.8), 0 0 0 1px var(--m-black), 0 0 0 2px rgba(150,140,120,.3);}
 
-  /* -------- sub-bar: All tab + counter + Show Map -------- */
-  .subbar{display:flex; align-items:center; gap:10px; padding:0 4px 8px; height:30px;}
-  .pill{
-    font-size:13px; color:var(--gold-soft); padding:4px 12px; border-radius:11px;
-    background:linear-gradient(180deg,#211c14,#100c08);
-    box-shadow:inset 0 0 0 1px #4a4132, inset 0 1px 3px rgba(0,0,0,.7);
+  /* ---------- sub-bar: All tab + counter + Show Map ---------- */
+  .subbar{display:flex; align-items:center; gap:9px; margin:0 2px 9px;}
+  /* every small element carries its own carved frame */
+  .chip{
+    font-size:13px; color:var(--gold-soft); padding:5px 13px; border-radius:11px;
+    background:linear-gradient(180deg,#1c1710,#0b0805);
+    box-shadow:
+      inset 0 2px 3px rgba(0,0,0,.85),          /* sunken */
+      inset 0 -1px 0 rgba(160,150,130,.22),
+      0 0 0 1px var(--m-black),
+      0 0 0 2px rgba(150,140,120,.28),          /* metal bezel */
+      0 1px 2px rgba(0,0,0,.6);
   }
-  .pill.tab{color:var(--gold);}
-  .pill.tab .m{color:#c23a2a; font-weight:bold; margin-right:5px;}
-  .showmap{margin-left:auto; color:var(--gold); font-size:14px; display:flex; align-items:center; gap:8px;}
-  .showmap .mapicon{
-    width:26px; height:26px; border-radius:4px; border:1px solid #000;
-    background:linear-gradient(180deg,#3a6a3a,#1c3a1c); box-shadow:inset 0 0 0 1px #6b4f18;
+  .chip.tab{color:var(--gold);}
+  .chip.tab .m{color:#d2422f; font-weight:bold; margin-right:6px;}
+  .showmap{margin-left:auto; color:var(--gold); font-size:14px; display:flex; align-items:center; gap:9px;}
+  .mapicon{
+    width:27px; height:27px; border-radius:5px;
+    background:linear-gradient(180deg,#3f6f3d,#20401f);
+    box-shadow:inset 0 1px 0 rgba(150,220,150,.4), inset 0 -2px 3px rgba(0,0,0,.6),
+      0 0 0 1px var(--m-black), 0 0 0 2px rgba(150,140,120,.3);
   }
 
-  /* ===================== BODY: two columns ===================== */
-  .body{display:flex; gap:9px; height:470px;}
+  /* ============================ BODY ============================ */
+  .body{display:flex; gap:11px; height:474px;}
 
-  /* left: dark slate quest list */
+  /* left: dark slate list — its own deep sunken well */
   .list-pane{
-    flex:0 0 350px; position:relative; overflow:hidden; border-radius:4px;
-    background:var(--noise), radial-gradient(ellipse at 50% 0%, #17140f, var(--slate) 75%);
-    background-blend-mode:overlay;
-    box-shadow:inset 0 0 0 1px #000, inset 0 0 0 2px rgba(120,110,95,.15), inset 0 0 26px rgba(0,0,0,.8);
-    padding:8px 14px 8px 10px;
+    flex:0 0 352px; position:relative; overflow:hidden; border-radius:5px; padding:8px 6px 8px 10px;
+    background-image:var(--grain-fine), radial-gradient(ellipse at 50% 0%, #191510, var(--slate) 78%);
+    background-size:120px 120px, 100%;
+    background-blend-mode:overlay, normal;
+    box-shadow:
+      inset 0 4px 8px rgba(0,0,0,.9),           /* deep sunken */
+      inset 0 0 0 1px #000,
+      inset 0 -1px 0 rgba(150,140,120,.15),
+      0 1px 0 rgba(170,160,140,.22);            /* bright lip */
   }
   .list-scroll{height:100%; overflow-y:auto; padding-right:6px;}
-  .zone{color:#c9bfa5; font-size:14px; padding:5px 0 2px; display:flex; align-items:center; gap:7px;}
+  .zone{color:#cabfa4; font-size:14px; padding:5px 2px 2px; display:flex; align-items:center; gap:8px;}
   .zone .minus{
-    width:15px; height:15px; flex:none; border-radius:3px; border:1px solid #2a0505;
-    background:linear-gradient(180deg,#b5352a,#6e1010); color:#ffd9c0; font-size:12px;
-    line-height:13px; text-align:center; font-weight:bold;
+    width:15px; height:15px; flex:none; border-radius:3px; color:#ffd9c0; font-size:11px;
+    line-height:14px; text-align:center; font-weight:bold;
+    background:linear-gradient(180deg,#c2402e,#7a1512);
+    box-shadow:inset 0 1px 0 rgba(255,180,150,.6), inset 0 -1px 1px rgba(0,0,0,.5),
+      0 0 0 1px #000, 0 0 0 1px rgba(150,140,120,.35);
   }
-  .quests{list-style:none; margin:0 0 4px; padding:0 0 0 22px;}
-  .quests li{padding:2px 4px; font-size:14px; cursor:pointer; border-radius:3px; color:var(--gold);}
-  .quests li:hover{background:rgba(199,168,87,.12);}
-  .quests li.sel{background:linear-gradient(90deg, rgba(199,150,40,.28), rgba(199,150,40,.05));
-    box-shadow:inset 0 0 0 1px rgba(199,168,87,.4);}
+  .quests{list-style:none; margin:0 0 4px; padding:0 0 0 23px;}
+  .quests li{padding:2px 5px; font-size:14px; cursor:pointer; border-radius:3px; color:var(--gold);}
+  .quests li:hover{background:rgba(199,168,87,.1);}
+  .quests li.sel{
+    background:linear-gradient(90deg, rgba(199,150,40,.3), rgba(199,150,40,.04));
+    box-shadow:inset 0 0 0 1px rgba(199,168,87,.45), inset 0 1px 2px rgba(0,0,0,.5);}
   .quests li.done{color:#6f6a5e;}
   .lvl{color:#cdb87a;}
-  .qmark{float:right; width:14px; height:14px; border-radius:50%;}
-  .qmark.blue{background:radial-gradient(circle at 40% 35%, #4aa0ff,#0060c0); box-shadow:0 0 4px #0070dd;}
-  .qmark.green{background:radial-gradient(circle at 40% 35%, #7bff5a,#189010); box-shadow:0 0 4px #1eff00;}
+  .qmark{float:right; width:14px; height:14px; border-radius:50%; margin-top:2px;}
+  .qmark.blue{background:radial-gradient(circle at 40% 34%, #59a8ff,#0060c0); box-shadow:0 0 4px #0070dd, inset 0 1px 1px rgba(255,255,255,.6);}
+  .qmark.green{background:radial-gradient(circle at 40% 34%, #86ff63,#189010); box-shadow:0 0 4px #1eff00, inset 0 1px 1px rgba(255,255,255,.6);}
 
-  /* right: parchment detail */
+  /* right: parchment detail — sunken well, aged paper */
   .detail-pane{
-    flex:1; position:relative; overflow:hidden; border-radius:4px;
-    background:
-      radial-gradient(ellipse at 50% 40%, rgba(255,245,210,.35), rgba(120,90,45,0) 70%),
-      var(--noise),
-      linear-gradient(160deg, var(--parch-hi), var(--parch) 55%, #a07c44 100%);
+    flex:1; position:relative; overflow:hidden; border-radius:5px; padding:16px 20px; color:#33220f;
+    background-image:
+      radial-gradient(ellipse at 50% 42%, rgba(255,246,214,.4), rgba(120,90,45,0) 68%),
+      var(--grain-fine),
+      linear-gradient(160deg, var(--parch-hi), var(--parch) 55%, var(--parch-lo));
+    background-size:100%, 120px 120px, 100%;
     background-blend-mode:normal, multiply, normal;
-    box-shadow:inset 0 0 0 1px #000, inset 0 0 60px rgba(90,55,20,.55);
-    color:#33220f; padding:16px 20px;
+    box-shadow:
+      inset 0 4px 8px rgba(0,0,0,.7),
+      inset 0 0 0 1px #000,
+      inset 0 0 46px rgba(90,55,20,.5),
+      0 1px 0 rgba(170,160,140,.22);
   }
   .detail-scroll{height:100%; overflow-y:auto; padding-right:6px;}
   .d-title{font-family:var(--header-font); font-weight:700; font-size:19px; color:#4a2c10;
-    letter-spacing:1px; text-transform:uppercase;}
+    letter-spacing:1px; text-transform:uppercase; text-shadow:0 1px 0 rgba(255,250,220,.5);}
   .d-sub{color:#5a3a18; font-size:14px; margin:2px 0 12px;}
   .d-head{font-family:var(--header-font); font-weight:700; font-size:15px; color:#7a2f12;
-    letter-spacing:1px; text-transform:uppercase; margin:14px 0 5px;}
+    letter-spacing:1px; text-transform:uppercase; margin:14px 0 5px; text-shadow:0 1px 0 rgba(255,250,220,.4);}
   .d-body{font-size:14px; line-height:1.5; color:#3a2611;}
   .signature{font-family:var(--header-font); font-style:italic; color:#2f4a86; font-size:17px; margin-top:14px;}
   .seal{
-    float:right; width:78px; height:78px; border-radius:50%; margin:-6px 6px 6px 12px;
-    background:radial-gradient(circle at 38% 32%, #3a7bd0, #123a72 60%, #0a2246 100%);
-    box-shadow:inset 0 3px 6px rgba(255,255,255,.35), inset 0 -6px 10px rgba(0,0,0,.5), 0 3px 6px rgba(0,0,0,.4);
+    float:right; width:80px; height:80px; border-radius:50%; margin:-4px 4px 6px 12px;
+    background:radial-gradient(circle at 38% 30%, #4a86dc, #123a72 58%, #0a2246);
+    box-shadow:inset 0 3px 7px rgba(255,255,255,.4), inset 0 -7px 11px rgba(0,0,0,.55), 0 3px 6px rgba(0,0,0,.4);
     clip-path:polygon(50% 0,63% 10%,80% 6%,86% 22%,100% 32%,92% 50%,100% 68%,84% 76%,80% 94%,63% 89%,50% 100%,37% 89%,20% 94%,16% 76%,0 68%,8% 50%,0 32%,14% 22%,20% 6%,37% 10%);
   }
   .reward-item{display:flex; align-items:center; gap:9px; margin:6px 0;}
   .reward-item .icon{
-    width:40px; height:40px; flex:none; border:2px solid var(--q-rare); border-radius:3px;
-    background:radial-gradient(circle at 40% 30%, #4a5a8a, #1a2038); box-shadow:0 0 5px rgba(0,112,221,.5);
+    width:40px; height:40px; flex:none; border-radius:3px;
+    background:radial-gradient(circle at 40% 30%, #4a5a8a, #1a2038);
+    /* quality border rendered as its own bezel */
+    box-shadow:inset 0 0 0 1px #000, 0 0 0 2px var(--q-rare), 0 0 6px rgba(0,112,221,.55), 0 0 0 3px rgba(0,0,0,.5);
   }
   .reward-item .rname{color:#1a3a86; font-size:14px;}
-  .coin{font-family:var(--num-font);} .coin i{font-style:normal;}
-  .c-g{color:#c8991f;} .c-s{color:#8a8a8a;}
+  .coin{font-family:var(--num-font);}
+  .c-g,.c-s{display:inline-block; width:13px; height:13px; border-radius:50%; vertical-align:-2px; margin:0 1px;}
+  .c-g{background:radial-gradient(circle at 38% 32%, #ffe98a,#c8991f); box-shadow:inset 0 -1px 1px rgba(120,80,0,.6);}
+  .c-s{background:radial-gradient(circle at 38% 32%, #f2f2f2,#9a9a9a); box-shadow:inset 0 -1px 1px rgba(60,60,60,.6);}
 
-  /* scrollbar look */
-  .list-scroll::-webkit-scrollbar,.detail-scroll::-webkit-scrollbar{width:9px;}
+  .list-scroll::-webkit-scrollbar,.detail-scroll::-webkit-scrollbar{width:10px;}
   .list-scroll::-webkit-scrollbar-thumb,.detail-scroll::-webkit-scrollbar-thumb{
-    background:linear-gradient(180deg,#6b5a34,#2e2512); border-radius:5px; border:1px solid #000;}
-  .list-scroll::-webkit-scrollbar-track,.detail-scroll::-webkit-scrollbar-track{background:rgba(0,0,0,.4);}
+    background:linear-gradient(180deg,#7a6838,#2e2512); border-radius:5px;
+    box-shadow:inset 0 1px 0 rgba(220,200,150,.4), 0 0 0 1px #000;}
+  .list-scroll::-webkit-scrollbar-track,.detail-scroll::-webkit-scrollbar-track{
+    background:rgba(0,0,0,.5); box-shadow:inset 0 0 3px rgba(0,0,0,.8);}
 
-  /* ===================== BOTTOM RED ACTION BAR ===================== */
-  .actionbar{display:flex; gap:8px; padding:11px 2px 2px; flex-wrap:wrap;}
+  /* ============================ RED ACTION BAR ============================ */
+  .actionbar{display:flex; gap:9px; margin:11px 2px 0; flex-wrap:wrap;}
   .rbtn{
-    flex:1; min-width:90px; text-align:center; cursor:pointer;
-    font-family:var(--body-font); font-size:15px; color:var(--gold);
-    padding:8px 10px; border-radius:4px; border:1px solid #1a0303;
-    text-shadow:1px 1px 1px #000;
-    background:linear-gradient(180deg,#a02722 0%,#7a1512 45%,#4e0c0a 100%);
-    box-shadow:inset 0 1px 0 rgba(255,150,120,.45), inset 0 0 0 1px rgba(0,0,0,.3),
-               0 2px 4px rgba(0,0,0,.6);
+    flex:1; min-width:92px; text-align:center; cursor:pointer;
+    color:var(--gold); font-size:15px; padding:8px 10px; border-radius:5px; text-shadow:1px 1px 1px #000;
+    background:linear-gradient(180deg,#b83228 0%,#8a1a15 48%,#520d0a 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,170,140,.6),       /* raised top light */
+      inset 0 -3px 4px rgba(0,0,0,.55),          /* base shade */
+      inset 0 0 0 1px rgba(0,0,0,.4),
+      0 0 0 1px var(--m-black),                  /* own metal keyline */
+      0 0 0 2px rgba(150,140,120,.32),           /* metal bezel around each button */
+      0 2px 4px rgba(0,0,0,.6);
   }
-  .rbtn:hover{filter:brightness(1.18);
-    box-shadow:inset 0 1px 0 rgba(255,180,140,.6), inset 0 0 10px rgba(255,120,80,.35), 0 2px 4px rgba(0,0,0,.6);}
-  .rbtn:active{filter:brightness(.82); box-shadow:inset 0 2px 5px rgba(0,0,0,.7);}
+  .rbtn:hover{filter:brightness(1.16);}
+  .rbtn:active{filter:brightness(.8);
+    box-shadow:inset 0 2px 5px rgba(0,0,0,.8), 0 0 0 1px var(--m-black), 0 0 0 2px rgba(150,140,120,.28);}
   .rbtn.disabled{
-    color:#6f6a5e; cursor:default; filter:none;
-    background:linear-gradient(180deg,#3a352d,#221f19);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.06);}
+    color:#6f6a5e; cursor:default; filter:none; text-shadow:none;
+    background:linear-gradient(180deg,#3a352d,#201d17);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05), inset 0 -2px 3px rgba(0,0,0,.5),
+      0 0 0 1px var(--m-black), 0 0 0 2px rgba(150,140,120,.2), 0 1px 2px rgba(0,0,0,.5);}
 
-  .legend{max-width:820px; margin:26px auto 0; color:var(--grey); font-size:12px; text-align:center; line-height:1.6;}
+  .legend{max-width:832px; margin:26px auto 0; color:var(--grey); font-size:12px; text-align:center; line-height:1.65;}
 </style>
 </head>
 <body>
   <h1 class="page-title">World of Warcraft — Classic Quest Log</h1>
-  <p class="page-sub">Pure-CSS reproduction · iron frame · slate list · parchment detail · red action buttons</p>
+  <p class="page-sub">Original pure-CSS reproduction · embossed metal · carved per-element frames · raised/sunken depth</p>
 
   <div class="window">
     <div class="titlebar">
-      <div class="medallion">📖</div>
+      <div class="portal"><span class="book">📖</span></div>
       <div class="win-title">Classic Quest Log</div>
       <div class="close-btn">✕</div>
     </div>
 
     <div class="subbar">
-      <span class="pill tab"><span class="m">−</span>All</span>
-      <span class="pill">Quests: 19/25</span>
+      <span class="chip tab"><span class="m">−</span>All</span>
+      <span class="chip">Quests: 19/25</span>
       <span class="showmap">Show Map <span class="mapicon"></span></span>
     </div>
 
-    <div class="body">
-      <!-- LEFT: slate list -->
-      <div class="list-pane">
-        <div class="list-scroll">
-          <div class="quests" style="padding-left:6px;">
-            <li class="sel"><span class="lvl">[110]</span> Hour of Reckoning</li>
+    <div class="well">
+      <div class="body">
+        <!-- LEFT: slate list -->
+        <div class="list-pane">
+          <div class="list-scroll">
+            <ul class="quests" style="padding-left:6px;">
+              <li class="sel"><span class="lvl">[110]</span> Hour of Reckoning</li>
+            </ul>
+            <div class="zone"><span class="minus">−</span>Antoran Wastes</div>
+            <ul class="quests"><li><span class="lvl">[110]</span> Fuel of a Doomed World <span class="qmark blue"></span></li></ul>
+            <div class="zone"><span class="minus">−</span>Antorus, the Burning Throne</div>
+            <ul class="quests">
+              <li><span class="lvl">[110]</span> Antorus, the Burning Throne… <span class="qmark green"></span></li>
+              <li><span class="lvl">[110]</span> The Soulhunter <span class="qmark green"></span></li>
+            </ul>
+            <div class="zone"><span class="minus">−</span>Black Rook Hold</div>
+            <ul class="quests"><li><span class="lvl">[110]</span> Black Rook Hold: The Lord of… <span class="qmark blue"></span></li></ul>
+            <div class="zone"><span class="minus">−</span>Icecrown Citadel</div>
+            <ul class="quests"><li class="done"><span class="lvl">[80]</span> Unholy Infusion <span class="qmark green"></span></li></ul>
+            <div class="zone"><span class="minus">−</span>Invasion Point</div>
+            <ul class="quests"><li><span class="lvl">[110]</span> Invasion Onslaught <span class="qmark blue"></span></li></ul>
+            <div class="zone"><span class="minus">−</span>Karazhan</div>
+            <ul class="quests"><li><span class="lvl">[110]</span> Return to Karazhan: The Tower of Power</li></ul>
+            <div class="zone"><span class="minus">−</span>Suramar</div>
+            <ul class="quests"><li><span class="lvl">[110]</span> Return to Karazhan: Cubic Cynosure</li></ul>
+            <div class="zone"><span class="minus">−</span>The Nighthold</div>
+            <ul class="quests"><li><span class="lvl">[110]</span> The Nighthold: Talisman of the Shal… <span class="qmark green"></span></li></ul>
+            <div class="zone"><span class="minus">−</span>Tomb of Sargeras</div>
+            <ul class="quests">
+              <li><span class="lvl">[110]</span> Tomb of Sargeras: Aegwynn's Path <span class="qmark green"></span></li>
+              <li><span class="lvl">[110]</span> Tomb of Sargeras: The Deceiver <span class="qmark green"></span></li>
+            </ul>
           </div>
-          <div class="zone"><span class="minus">−</span>Antoran Wastes</div>
-          <ul class="quests"><li><span class="lvl">[110]</span> Fuel of a Doomed World <span class="qmark blue"></span></li></ul>
-          <div class="zone"><span class="minus">−</span>Antorus, the Burning Throne</div>
-          <ul class="quests">
-            <li><span class="lvl">[110]</span> Antorus, the Burning Throne… <span class="qmark green"></span></li>
-            <li><span class="lvl">[110]</span> The Soulhunter <span class="qmark green"></span></li>
-          </ul>
-          <div class="zone"><span class="minus">−</span>Black Rook Hold</div>
-          <ul class="quests"><li><span class="lvl">[110]</span> Black Rook Hold: The Lord of… <span class="qmark blue"></span></li></ul>
-          <div class="zone"><span class="minus">−</span>Icecrown Citadel</div>
-          <ul class="quests"><li class="done"><span class="lvl">[80]</span> Unholy Infusion <span class="qmark green"></span></li></ul>
-          <div class="zone"><span class="minus">−</span>Invasion Point</div>
-          <ul class="quests"><li><span class="lvl">[110]</span> Invasion Onslaught <span class="qmark blue"></span></li></ul>
-          <div class="zone"><span class="minus">−</span>Karazhan</div>
-          <ul class="quests"><li><span class="lvl">[110]</span> Return to Karazhan: The Tower of Power</li></ul>
-          <div class="zone"><span class="minus">−</span>Suramar</div>
-          <ul class="quests"><li><span class="lvl">[110]</span> Return to Karazhan: Cubic Cynosure</li></ul>
-          <div class="zone"><span class="minus">−</span>The Nighthold</div>
-          <ul class="quests"><li><span class="lvl">[110]</span> The Nighthold: Talisman of the Shal… <span class="qmark green"></span></li></ul>
-          <div class="zone"><span class="minus">−</span>Tomb of Sargeras</div>
-          <ul class="quests">
-            <li><span class="lvl">[110]</span> Tomb of Sargeras: Aegwynn's Path <span class="qmark green"></span></li>
-            <li><span class="lvl">[110]</span> Tomb of Sargeras: The Deceiver <span class="qmark green"></span></li>
-          </ul>
         </div>
-      </div>
 
-      <!-- RIGHT: parchment detail -->
-      <div class="detail-pane">
-        <div class="detail-scroll">
-          <div class="d-title">Hour of Reckoning</div>
-          <div class="d-sub">Meet Master Mathias Shaw in Stormwind Harbor.</div>
-
-          <div class="d-head">Description</div>
-          <div class="d-body">
-            Champions of the Alliance,<br><br>
-            At last the time has come for us to reclaim what is rightfully ours! Our final
-            push to retake Lordaeron Keep shall commence at dawn.<br><br>
-            The Horde and their Warchief must answer for their crimes!
+        <!-- RIGHT: parchment detail -->
+        <div class="detail-pane">
+          <div class="detail-scroll">
+            <div class="d-title">Hour of Reckoning</div>
+            <div class="d-sub">Meet Master Mathias Shaw in Stormwind Harbor.</div>
+            <div class="d-head">Description</div>
+            <div class="d-body">
+              Champions of the Alliance,<br><br>
+              At last the time has come for us to reclaim what is rightfully ours! Our final
+              push to retake Lordaeron Keep shall commence at dawn.<br><br>
+              The Horde and their Warchief must answer for their crimes!
+            </div>
+            <div class="signature">King<br>Anduin Wrynn</div>
+            <div class="seal"></div>
+            <div style="clear:both"></div>
+            <div class="d-head">Rewards</div>
+            <div class="d-body">You will receive:</div>
+            <div class="reward-item"><span class="icon"></span><span class="rname">Footman's Warmace</span></div>
+            <div class="d-body" style="margin-top:6px;">You will also receive:
+              <span class="coin">1<span class="c-g"></span> 94<span class="c-s"></span></span>
+            </div>
+            <div class="d-body">Experience: <b>1,650</b></div>
           </div>
-          <div class="signature">King<br>Anduin Wrynn</div>
-          <div class="seal"></div>
-
-          <div style="clear:both"></div>
-          <div class="d-head">Rewards</div>
-          <div class="d-body">You will receive:</div>
-          <div class="reward-item">
-            <span class="icon"></span>
-            <span class="rname">Footman's Warmace</span>
-          </div>
-          <div class="d-body" style="margin-top:6px;">You will also receive:
-            <span class="coin"><span class="c-g">1</span><i>🟡</i> <span class="c-s">94</span><i>⚪</i></span>
-          </div>
-          <div class="d-body">Experience: <b>1,650</b></div>
         </div>
       </div>
     </div>
@@ -286,9 +347,10 @@
   </div>
 
   <p class="legend">
-    Corrections from the reference shot: warm <b>iron/gunmetal frame</b> (not gold) · <b>dark slate</b> quest list with grain texture ·
-    <b>parchment</b> detail pane with brown small-caps headers, blue wax seal &amp; signature · <b>red action buttons with gold text</b> ·
-    quality-bordered reward icon. Texture is a self-contained SVG fractal-noise overlay — no external assets. See RESEARCH.md.
+    All original CSS — <b>no Blizzard texture files used</b>. Metal &amp; paper grain are generated procedurally with an
+    SVG <code>feDiffuseLighting</code> filter (real surface height, not a flat gradient). Every element carries its own
+    carved metal bezel; depth uses directional bevels — <b>raised</b> (light top / dark base) for buttons, portal &amp; rivets,
+    <b>sunken</b> (dark top / light lip) for the wells, chips &amp; list. See RESEARCH.md for the construction notes.
   </p>
 </body>
 </html>

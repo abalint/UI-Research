@@ -129,6 +129,56 @@ parchment or list area beneath.
 
 ---
 
+## 4b. Depth & fine detail — what makes it read as "real"
+
+The single biggest fidelity gap in a naive CSS copy is **flatness**. The genuine UI gets
+its richness from three things baked into the art, which must be reproduced deliberately:
+
+1. **Every element is its own carved frame.** Not just the window — the close button, the
+   counter chip, each action button, the reward icon, the collapse boxes all have their
+   own metal bezel + keyline. Nothing sits as flat text on a surface. When copying,
+   give each interactive element its own border/bevel, not just the outer panel.
+
+2. **Raised vs. sunken depth (directional bevels).** Elements are lit from the upper-left,
+   so:
+   - **Raised** (buttons, portrait ring, rivets, the frame band itself): **light highlight
+     on top**, **dark shade on the bottom**, plus a soft outer drop shadow.
+   - **Sunken** (the content wells, input chips, the quest list, parchment): **dark shade
+     on top-inside**, a faint **bright lip on the bottom edge**. This is what makes the
+     list and parchment feel *recessed into* the frame.
+
+   In CSS this is layered `box-shadow`:
+   ```css
+   .raised{ box-shadow: inset 0 1px 0 rgba(255,235,200,.6),
+                        inset 0 -3px 4px rgba(0,0,0,.55), 0 2px 4px rgba(0,0,0,.6); }
+   .sunken{ box-shadow: inset 0 4px 8px rgba(0,0,0,.85),
+                        inset 0 -1px 0 rgba(160,150,120,.2), 0 1px 0 rgba(170,160,140,.22); }
+   ```
+
+3. **Surface texture with real height, not a flat tint.** The metal and parchment have
+   fine bumpy grain that catches the light. A plain gradient can't do this. Two
+   copyright-safe ways to fake genuine height:
+   - **SVG `feDiffuseLighting`** over `feTurbulence` noise — procedurally lights a noise
+     heightmap, producing embossed metal/paper. Encode as a `data:` URI background and
+     blend with `background-blend-mode: overlay`. (This project uses exactly this.)
+   - Or hand-authored seamless-tiling grain PNGs you make yourself.
+
+4. **The portrait ring is part of the frame, not floating.** It shares the frame's metal
+   material and nests into the top-left corner (a metal collar + concentric gold ring +
+   a deep inset well for the icon), so it reads as cast into the frame rather than pasted
+   on top. Build it from the *same* texture + bevel stack as the frame.
+
+5. **Rivets / bolts and thin keylines.** Small dark metal studs near the corners and a
+   crisp 1px black keyline around every metal edge supply the "fine detail" that sells the
+   material at a glance.
+
+> **Assets note:** Blizzard's actual UI texture PNGs are copyrighted and are **not** used
+> here. Everything is reproduced procedurally in CSS/SVG. The `Gethe/wow-ui-textures` and
+> `tekkub/wow-ui-source` repos remain useful *references* for dimensions, insets, and
+> proportions, but their art should not be shipped.
+
+---
+
 ## 5. The specific panels
 
 ### Quest Log
