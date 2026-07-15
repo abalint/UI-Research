@@ -13,8 +13,15 @@ tooltips — rather than the gameplay HUD.
   language, typography, color system, nine-slice frame construction, per-panel layouts,
   the reusable widget kit, and where to get exact texture assets.
 - **[`wowUI/index.html`](./wowUI/index.html)** — a self-contained, viewable example
-  page. A **pure-CSS** approximation of the panel kit (quest log, tooltip, options
-  widgets, and the item-quality / class / text color palettes). Open it in any browser.
+  page reproducing the **Classic Quest Log** entirely in original CSS (no Blizzard
+  texture files). Open it in any browser.
+
+![Quest Log reproduction](./wowUI/preview.png)
+
+Construction highlights: a corner-straddling portrait medallion cast into the frame,
+each region built as its own recessed metal sub-frame, framed widgets (counter, tab,
+scrollbars, buttons), red gold-text action buttons, and procedural embossed
+metal/parchment via an SVG `feDiffuseLighting` grain.
 
 #### View the example
 Open `wowUI/index.html` directly in a browser, or serve locally:
